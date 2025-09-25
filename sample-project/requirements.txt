@@ -1,0 +1,17 @@
+# Legacy dependencies that need upgrading
+requests==2.25.1  # Outdated, has security vulnerabilities
+flask==1.1.4      # Old version, should upgrade to 2.x or 3.x
+pandas==1.3.0     # Older version, should upgrade to 2.x
+numpy==1.21.0     # Older version
+urllib3==1.26.5   # May have security issues
+jinja2==2.11.3    # Older version with potential vulnerabilities
+werkzeug==1.0.1   # Old version
+click==7.1.2      # Older version
+itsdangerous==1.1.0  # Older version
+markupsafe==1.1.1    # Older version
+
+# Development dependencies
+pytest==6.2.4    # Older version
+black==21.6b0     # Older version
+flake8==3.9.2     # Older version
+mypy==0.910       # Older version
