@@ -1,0 +1,19 @@
+# Secure dependencies - updated to latest versions without known vulnerabilities
+requests>=2.32.5      # Fix CVE-2023-32681, CVE-2024-47081, CVE-2024-35195
+flask>=3.0.0          # Fix CVE-2023-30861
+pandas>=2.0.0         # Upgrade to latest stable
+numpy>=1.24.0         # Fix CVE-2021-41495, CVE-2021-34141, CVE-2021-41496
+urllib3>=2.5.0        # Fix CVE-2025-50181, CVE-2024-37891
+jinja2>=3.1.6         # Fix CVE-2024-56326, CVE-2024-34064, CVE-2024-22195
+werkzeug>=3.0.6       # Fix CVE-2024-49766, CVE-2023-23934, CVE-2023-25577
+click>=8.0.0          # Fix insecure mktemp usage
+itsdangerous>=2.1.0   # Latest secure version
+markupsafe>=2.1.0     # Latest secure version
+
+# Development dependencies - secure versions
+pytest>=7.0.0         # Latest stable
+black>=23.0.0         # Latest stable
+flake8>=6.0.0         # Latest stable
+mypy>=1.0.0           # Latest stable
+safety>=3.0.0         # Security scanning
+bandit>=1.7.0         # Code security analysis
