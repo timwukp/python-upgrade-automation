@@ -4,80 +4,86 @@ Sample Python application with legacy patterns that need upgrading
 This simulates a typical Python 3.8 application that needs modernization
 """
 
-import collections  # Legacy import - should use collections.abc for ABCs
-import imp  # Deprecated in Python 3.4, removed in Python 3.12
+import collections.abc  # Modern import for abstract base classes
+import importlib.util  # Modern replacement for deprecated imp module
 import json
 import os
 from typing import Dict, List
 
-# Legacy collections usage (deprecated)
-def process_data(items: collections.Iterable) -> Dict:
-    """Process iterable data - uses deprecated collections.Iterable"""
+# Modern collections usage
+def process_data(items: collections.abc.Iterable) -> Dict:
+    """Process iterable data - uses modern collections.abc.Iterable"""
     result = {}
     for item in items:
-        if isinstance(item, collections.Mapping):
+        if isinstance(item, collections.abc.Mapping):
             result.update(item)
     return result
 
-# Using deprecated imp module
+# Modern module loading using importlib
 def load_config_module(config_path: str):
-    """Load configuration module using deprecated imp"""
+    """Load configuration module using modern importlib"""
     try:
-        return imp.load_source('config', config_path)
+        spec = importlib.util.spec_from_file_location("config", config_path)
+        if spec and spec.loader:
+            config_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(config_module)
+            return config_module
     except Exception as e:
         print(f"Failed to load config: {e}")
-        return None
+    return None
 
-# Old-style string formatting (should use f-strings)
+# Modern string formatting with f-strings
 def generate_report(user_name: str, score: int) -> str:
-    """Generate user report with old string formatting"""
-    return "User %s has score %d" % (user_name, score)
+    """Generate user report with modern f-string formatting"""
+    return f"User {user_name} has score {score}"
 
-# Missing type hints and using old patterns
-def calculate_average(numbers):
-    """Calculate average without proper type hints"""
+# Proper type hints and modern patterns
+def calculate_average(numbers: List[float]) -> float:
+    """Calculate average with proper type hints"""
     if not numbers:
-        return 0
+        return 0.0
     return sum(numbers) / len(numbers)
 
-# Using deprecated dict.has_key() pattern (Python 2 style)
+# Modern dictionary checking
 def check_config(config_dict: Dict, key: str) -> bool:
-    """Check if config has key - old style"""
-    # This would be config_dict.has_key(key) in Python 2
-    # Using 'in' operator is more modern
-    if key in config_dict.keys():  # Inefficient - should just use 'in config_dict'
-        return True
-    return False
+    """Check if config has key - modern style"""
+    return key in config_dict  # Direct membership test - more efficient
 
-# Old exception handling pattern
+# Modern exception handling
 def safe_divide(a: float, b: float) -> float:
-    """Safe division with old exception handling"""
+    """Safe division with modern exception handling"""
     try:
         result = a / b
-    except ZeroDivisionError, e:  # Python 2 syntax - should use 'as'
-        print("Division by zero error: %s" % str(e))
+    except ZeroDivisionError as e:  # Modern Python 3 syntax
+        print(f"Division by zero error: {e}")
         return 0.0
     return result
 
-# Main execution
-if __name__ == "__main__":
-    # Test the legacy functions
+# Main execution with modern patterns
+def main() -> None:
+    """Main function with proper structure"""
+    # Test the modernized functions
     sample_data = [{'name': 'Alice', 'score': 95}, {'name': 'Bob', 'score': 87}]
     
     print("Processing sample data...")
     result = process_data(sample_data)
-    print("Result: %s" % json.dumps(result, indent=2))
+    print(f"Result: {json.dumps(result, indent=2)}")
     
     # Test configuration loading
-    config = load_config_module('config.py')
-    if config:
-        print("Config loaded successfully")
+    config_path = 'config.py'
+    if os.path.exists(config_path):
+        config = load_config_module(config_path)
+        if config:
+            print("Config loaded successfully")
     
     # Test report generation
     report = generate_report("John Doe", 92)
     print(report)
     
     # Test average calculation
-    scores = [95, 87, 92, 78, 85]
+    scores = [95.0, 87.0, 92.0, 78.0, 85.0]
     avg = calculate_average(scores)
-    print("Average score: %.2f" % avg)
+    print(f"Average score: {avg:.2f}")
+
+if __name__ == "__main__":
+    main()
