@@ -1,0 +1,35 @@
+{
+  "description": "Python upgrade automation agent for discovering and analyzing Python codebases",
+  "model": "claude-3-5-sonnet-20241022",
+  "tools": [
+    "fs_read", 
+    "fs_write", 
+    "execute_bash", 
+    "@github/*", 
+    "@awslabs.aws-api-mcp-server/*",
+    "@awslabs.cloudwatch-mcp-server/*"
+  ],
+  "allowedTools": ["fs_read", "fs_write", "execute_bash"],
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": ["./", "**/*.py", "**/requirements*.txt", "**/setup.py", "**/pyproject.toml"]
+    },
+    "execute_bash": {
+      "allowedCommands": [
+        "python --version", 
+        "pip list", 
+        "pytest", 
+        "bandit -r .", 
+        "safety check",
+        "find . -name '*.py'",
+        "grep -r 'import' --include='*.py'"
+      ],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file://configs/dependency-upgrade-rules.yaml",
+    "file://configs/security-policies.yaml",
+    "file://docs/best-practices.md"
+  ]
+}

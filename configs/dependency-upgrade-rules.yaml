@@ -1,0 +1,96 @@
+# Sample dependency upgrade rules for Python projects
+# This is a reference configuration for educational purposes
+
+upgrade_rules:
+  # Web frameworks
+  django:
+    current_pattern: "<4.0"
+    target: ">=4.2,<5.0"
+    breaking_changes:
+      - "Update MIDDLEWARE setting format"
+      - "Replace force_text with force_str"
+      - "Update URL patterns syntax"
+    test_commands:
+      - "python manage.py check"
+      - "python manage.py test"
+    
+  flask:
+    current_pattern: "<2.0"
+    target: ">=3.0,<4.0"
+    breaking_changes:
+      - "Update import statements for extensions"
+      - "Handle JSON parsing changes"
+      - "Update Werkzeug compatibility"
+    test_commands:
+      - "python -m pytest tests/"
+  
+  # Data processing
+  pandas:
+    current_pattern: "<2.0"
+    target: ">=2.0,<3.0"
+    breaking_changes:
+      - "Replace deprecated DataFrame.append()"
+      - "Update datetime accessor changes"
+      - "Handle index behavior changes"
+    test_commands:
+      - "python -m pytest tests/pandas_tests.py"
+  
+  numpy:
+    current_pattern: "<1.22"
+    target: ">=1.24,<2.0"
+    breaking_changes:
+      - "Update deprecated array creation methods"
+      - "Handle dtype changes"
+    test_commands:
+      - "python -m pytest tests/numpy_tests.py"
+  
+  # Security-critical packages
+  requests:
+    current_pattern: "<2.32.0"
+    target: ">=2.32.5"
+    security_priority: "high"
+    vulnerabilities:
+      - "CVE-2023-32681"
+      - "CVE-2024-47081"
+      - "CVE-2024-35195"
+  
+  urllib3:
+    current_pattern: "<2.0"
+    target: ">=2.5.0"
+    security_priority: "high"
+    vulnerabilities:
+      - "CVE-2025-50181"
+      - "CVE-2024-37891"
+  
+  jinja2:
+    current_pattern: "<3.0"
+    target: ">=3.1.6"
+    security_priority: "high"
+    vulnerabilities:
+      - "CVE-2024-56326"
+      - "CVE-2024-34064"
+  
+  werkzeug:
+    current_pattern: "<3.0"
+    target: ">=3.0.6"
+    security_priority: "high"
+    vulnerabilities:
+      - "CVE-2024-49766"
+      - "CVE-2023-23934"
+
+# Global upgrade settings
+settings:
+  backup_before_upgrade: true
+  run_tests_after_upgrade: true
+  security_scan_after_upgrade: true
+  max_risk_score: 70
+  
+# Testing configuration
+testing:
+  frameworks:
+    - "pytest"
+    - "unittest"
+  coverage_threshold: 80
+  security_tools:
+    - "bandit"
+    - "safety"
