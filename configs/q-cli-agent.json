@@ -1,35 +1,67 @@
 {
-  "description": "Python upgrade automation agent for discovering and analyzing Python codebases",
+  "description": "Secure Python upgrade automation agent with comprehensive security controls",
   "model": "claude-3-5-sonnet-20241022",
   "tools": [
     "fs_read", 
     "fs_write", 
-    "execute_bash", 
     "@github/*", 
     "@awslabs.aws-api-mcp-server/*",
     "@awslabs.cloudwatch-mcp-server/*"
   ],
-  "allowedTools": ["fs_read", "fs_write", "execute_bash"],
+  "allowedTools": ["fs_read"],
   "toolsSettings": {
     "fs_read": {
-      "allowedPaths": ["./", "**/*.py", "**/requirements*.txt", "**/setup.py", "**/pyproject.toml"]
-    },
-    "execute_bash": {
-      "allowedCommands": [
-        "python --version", 
-        "pip list", 
-        "pytest", 
-        "bandit -r .", 
-        "safety check",
-        "find . -name '*.py'",
-        "grep -r 'import' --include='*.py'"
+      "allowedPaths": [
+        "./sample-project/**/*.py", 
+        "./sample-project/**/requirements*.txt", 
+        "./sample-project/**/setup.py", 
+        "./sample-project/**/pyproject.toml",
+        "./configs/*.yaml",
+        "./configs/*.json",
+        "./docs/*.md"
       ],
-      "autoAllowReadonly": true
+      "deniedPaths": [
+        "**/.git/**",
+        "**/.env",
+        "**/secrets/**",
+        "**/*.key",
+        "**/*.pem"
+      ]
+    }
+  },
+  "security": {
+    "input_validation": {
+      "enabled": true,
+      "strict_mode": true,
+      "max_file_size": "10MB",
+      "allowed_file_types": [".py", ".txt", ".yaml", ".json", ".md", ".toml"]
+    },
+    "access_control": {
+      "require_authentication": true,
+      "session_timeout": 3600,
+      "max_concurrent_sessions": 5
+    },
+    "audit_logging": {
+      "enabled": true,
+      "log_all_operations": true,
+      "sensitive_data_masking": true
     }
   },
   "resources": [
     "file://configs/dependency-upgrade-rules.yaml",
     "file://configs/security-policies.yaml",
     "file://docs/best-practices.md"
-  ]
+  ],
+  "upgrade_policies": {
+    "security_first": true,
+    "require_vulnerability_scan": true,
+    "max_risk_threshold": 50,
+    "mandatory_backup": true,
+    "test_before_deploy": true
+  },
+  "compliance": {
+    "frameworks": ["SOC2", "ISO27001", "NIST"],
+    "data_protection": "GDPR_compliant",
+    "audit_trail": "comprehensive"
+  }
 }
